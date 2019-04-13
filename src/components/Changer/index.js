@@ -1,18 +1,19 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
 import "./style.sass";
-import { MyCurrencyInput } from "./MyCurrencyInput";
-import { DesiredCurrencyInput } from "./DesiredCurrencyInput";
+import { BaseCurrencyInput } from "./BaseCurrencyInput";
+import { Rates } from "./Rates";
+import { QuotedCurrencyInput } from "./QuotedCurrencyInput";
 
 class Changer extends Component {
   state = {
     loading: true,
     modalIsOpen: false,
     currencies: {},
-    myCurrency: "RUB", // by default 'У меня есть'
-    desiredCurrency: "EUR", // by default 'Хочу приобрести'
-    myCurrencyValue: "",
-    desiredCurrencyValue: "",
+    baseCurrency: "RUB", // by default 'У меня есть'
+    quoteCurrency: "EUR", // by default 'Хочу приобрести'
+    baseCurrencyValue: "",
+    quoteCurrencyValue: "",
     intervalID: ""
   };
 
@@ -47,67 +48,67 @@ class Changer extends Component {
     });
   };
 
-  handleMyCurrency = e => {
+  handlebaseCurrency = e => {
     const { id } = e.target;
-    if (id === this.state.desiredCurrency) {
+    if (id === this.state.quoteCurrency) {
       this.reverseCurrencies();
     }
     this.setState({
-      myCurrency: id,
-      myCurrencyValue: "",
-      desiredCurrencyValue: ""
+      baseCurrency: id,
+      baseCurrencyValue: "",
+      quoteCurrencyValue: ""
     });
   };
 
-  handleDesiredCurrency = e => {
+  handlequoteCurrency = e => {
     const { id } = e.target;
-    if (id === this.state.myCurrency) {
+    if (id === this.state.baseCurrency) {
       this.reverseCurrencies();
     }
     this.setState({
-      desiredCurrency: id,
-      myCurrencyValue: "",
-      desiredCurrencyValue: ""
+      quoteCurrency: id,
+      baseCurrencyValue: "",
+      quoteCurrencyValue: ""
     });
   };
 
-  handleInputMyCurrency = e => {
-    const { myCurrency, desiredCurrency, currencies } = this.state;
+  handleInputbaseCurrency = e => {
+    const { baseCurrency, quoteCurrency, currencies } = this.state;
     const { value } = e.target;
-    const rate = currencies[myCurrency][desiredCurrency];
+    const rate = currencies[baseCurrency][quoteCurrency];
     const result = (value * rate).toFixed(2);
-    this.setState({ myCurrencyValue: value, desiredCurrencyValue: result });
+    this.setState({ baseCurrencyValue: value, quoteCurrencyValue: result });
   };
 
-  handleInputDesiredCurrency = e => {
-    const { myCurrency, desiredCurrency, currencies } = this.state;
+  handleInputquoteCurrency = e => {
+    const { baseCurrency, quoteCurrency, currencies } = this.state;
     const { value } = e.target;
-    const rate = currencies[desiredCurrency][myCurrency];
+    const rate = currencies[quoteCurrency][baseCurrency];
     const result = (value * rate).toFixed(2);
     this.setState({
-      desiredCurrencyValue: value,
-      myCurrencyValue: result
+      quoteCurrencyValue: value,
+      baseCurrencyValue: result
     });
   };
 
   reverseCurrencies = () => {
-    const { myCurrency, desiredCurrency } = this.state;
-    const a = desiredCurrency;
-    const b = myCurrency;
+    const { baseCurrency, quoteCurrency } = this.state;
+    const a = quoteCurrency;
+    const b = baseCurrency;
     this.setState({
-      myCurrency: a,
-      desiredCurrency: b,
-      myCurrencyValue: "",
-      desiredCurrencyValue: ""
+      baseCurrency: a,
+      quoteCurrency: b,
+      baseCurrencyValue: "",
+      quoteCurrencyValue: ""
     });
   };
 
   render() {
     const {
-      myCurrencyValue,
-      desiredCurrencyValue,
-      myCurrency,
-      desiredCurrency,
+      baseCurrencyValue,
+      quoteCurrencyValue,
+      baseCurrency,
+      quoteCurrency,
       currencies,
       loading
     } = this.state;
@@ -126,11 +127,11 @@ class Changer extends Component {
           </button>
           {!loading && (
             <>
-              <MyCurrencyInput
-                choosedCurrency={myCurrency}
-                value={myCurrencyValue}
-                handleMyCurrency={this.handleMyCurrency}
-                handleInputMyCurrency={this.handleInputMyCurrency}
+              <BaseCurrencyInput
+                choosedCurrency={baseCurrency}
+                value={baseCurrencyValue}
+                handlebaseCurrency={this.handlebaseCurrency}
+                handleInputbaseCurrency={this.handleInputbaseCurrency}
               />
 
               <span
@@ -139,25 +140,17 @@ class Changer extends Component {
               >
                 &#8644;
               </span>
-              <DesiredCurrencyInput
-                value={desiredCurrencyValue}
-                choosedCurrency={desiredCurrency}
-                handleDesiredCurrency={this.handleDesiredCurrency}
-                handleInputDesiredCurrency={this.handleInputDesiredCurrency}
+              <QuotedCurrencyInput
+                value={quoteCurrencyValue}
+                choosedCurrency={quoteCurrency}
+                handlequoteCurrency={this.handlequoteCurrency}
+                handleInputquoteCurrency={this.handleInputquoteCurrency}
               />
-              <div>
-                Курсы обмена:
-                <p>
-                  {`1 ${myCurrency} = ${currencies[myCurrency][
-                    desiredCurrency
-                  ].toFixed(2)} ${desiredCurrency}`}
-                </p>
-                <p>
-                  {`1 ${desiredCurrency} = ${currencies[desiredCurrency][
-                    myCurrency
-                  ].toFixed(2)} ${myCurrency}`}
-                </p>
-              </div>
+              <Rates
+                baseCurrency={baseCurrency}
+                quoteCurrency={quoteCurrency}
+                currencies={currencies}
+              />
             </>
           )}
         </Modal>

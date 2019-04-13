@@ -1,8 +1,8 @@
 import React from "react";
 
-export const MyCurrencyInput = ({
-  handleMyCurrency,
-  handleInputMyCurrency,
+export const BaseCurrencyInput = ({
+  handlebaseCurrency,
+  handleInputbaseCurrency,
   choosedCurrency,
   value
 }) => (
@@ -10,27 +10,27 @@ export const MyCurrencyInput = ({
     <div>У меня есть</div>
     <div className="currency-input__buttons-group">
       <button
-        onClick={handleMyCurrency}
+        onClick={handlebaseCurrency}
         id="RUB"
         className={choosedCurrency === "RUB" ? "active" : ""}
       >
         RUB
       </button>
       <button
-        onClick={handleMyCurrency}
+        onClick={handlebaseCurrency}
         id="USD"
         className={choosedCurrency === "USD" ? "active" : ""}
       >
         USD
       </button>
       <button
-        onClick={handleMyCurrency}
+        onClick={handlebaseCurrency}
         id="EUR"
         className={choosedCurrency === "EUR" ? "active" : ""}
       >
         EUR
       </button>
     </div>
-    <input onChange={handleInputMyCurrency} value={value} type="number" />
+    <input onChange={handleInputbaseCurrency} value={value} type="number" />
   </div>
 );
